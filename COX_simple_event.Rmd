@@ -1,0 +1,914 @@
+---
+title: "COX_simple_RHK"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r dependencies, include=FALSE}
+library(tidyverse)
+library(survival)
+library(kableExtra)
+library(readxl)
+library(janitor)
+library(openintro)
+```
+
+```{r data-load, include=FALSE}
+
+
+data_survival <- read_excel("D:/R backups/RHK/Tab_alex_2.xlsx")
+data_survival3 <- read_excel("D:/R backups/RHK/Tab_alex_3.xlsx")
+survdat <- janitor::clean_names(data_survival)
+survdat2 <- janitor::clean_names(data_survival3)
+survdat$survival<-survdat$survival_endpunkt
+survdat2$survival<-survdat2$survival_endpunkt
+
+```
+
+## Cox Regression
+
+```{r christophs-loop, echo=FALSE}
+
+survdat$ci_complete<-as.numeric(survdat$ci_complete)
+ggplot(survdat, aes(x=ci_complete)) + geom_histogram(binwidth=.5)
+
+summary(survdat$ci_complete)
+
+covariates <- c("druck_pa_systolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("druck_pa_diastolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+covariates <- c("wiederstand_pulmonal",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,4),
+  ci_l = round(ci_lower,4),
+  ci_u = round(ci_upper,4),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+
+
+
+
+
+covariates <- c("druck_pa_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_ra_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_pc_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("svo2_avg_measured",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("ci_complete",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+```
+
+
+
+
+#non-ischemic
+
+```{r split1, echo=FALSE}
+
+data_survival <- read_excel("D:/R backups/RHK/Tab_alex_2.xlsx")
+data_survival3 <- read_excel("D:/R backups/RHK/Tab_alex_3.xlsx")
+survdat <- janitor::clean_names(data_survival)
+survdat2 <- janitor::clean_names(data_survival3)
+split<-split(survdat, survdat$icmp)
+survdat<-split$`0`
+survdat$ci_complete<-as.numeric(survdat$ci_complete)
+ggplot(survdat, aes(x=ci_complete)) + geom_histogram(binwidth=.5)
+
+summary(survdat$ci_complete)
+
+covariates <- c("druck_pa_systolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("druck_pa_diastolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+covariates <- c("wiederstand_pulmonal",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,4),
+  ci_l = round(ci_lower,4),
+  ci_u = round(ci_upper,4),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+
+
+
+
+
+covariates <- c("druck_pa_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_ra_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "icmp","sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_pc_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("svo2_avg_measured",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("ci_complete",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+```
+
+
+
+
+#Ischemic
+
+
+```{r split2, echo=FALSE}
+
+data_survival <- read_excel("D:/R backups/RHK/Tab_alex_2.xlsx")
+data_survival3 <- read_excel("D:/R backups/RHK/Tab_alex_3.xlsx")
+survdat <- janitor::clean_names(data_survival)
+
+split<-split(survdat, survdat$icmp)
+survdat<-split$`1`
+ggplot(survdat, aes(x=ci_complete)) + geom_histogram(binwidth=.5)
+
+summary(survdat$ci_complete)
+
+covariates <- c("druck_pa_systolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("druck_pa_diastolisch",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+covariates <- c("wiederstand_pulmonal",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,4),
+  ci_l = round(ci_lower,4),
+  ci_u = round(ci_upper,4),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+
+
+
+
+
+covariates <- c("druck_pa_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_ra_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+covariates <- c("druck_pc_durchschnitt",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("svo2_avg_measured",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+covariates <- c("ci_complete",  
+                  "age_at_rhk",  "ntbnp", "hstnt",  "krea", "sex")
+name <- character()
+coefficients <- numeric()
+ci_lower <- numeric()
+ci_upper <- numeric()
+p_val_wald <- numeric()
+for (i in covariates) {
+  formula <- as.formula(paste("Surv(survival, event) ~", i))
+  coxmodel <- coxph(formula, data=survdat)
+  name <- append(name, i)
+  coefficients <- append(coefficients, exp(coxmodel[[1]]))
+  ci_lower <- append(ci_lower, exp(confint(coxmodel)[1]))
+  ci_upper <- append(ci_upper, exp(confint(coxmodel)[2]))
+  coxmodel.summary <- summary(coxmodel)
+  p.val <- coxmodel.summary$waldtest[3]
+  p_val_wald <- append(p_val_wald, p.val)
+}
+
+
+
+tibble(
+  variable = name,
+  coefficient = round(coefficients,2),
+  ci_l = round(ci_lower,2),
+  ci_u = round(ci_upper,2),
+  p_val = round(p_val_wald,3)
+) -> univariate_results
+
+univariate_results %>%
+  kbl(caption = "Univariate Cox Regression Results") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+
+
+```
